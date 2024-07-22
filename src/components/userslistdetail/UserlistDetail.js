@@ -76,11 +76,12 @@ const UserlistDetail = () => {
   //   fetchUserDetail();
   // }, [location.state.userid]);
 
-  const address =
-    detail && detail.length > 0
-      ? `${detail.address.street}, ${detail.address.city}, ${detail.address.zipcode}, ${detail.address.suite}`
-      : "Address information not available";
-
+  const address = detail 
+    ? `${detail?.address?.address}, ${detail?.address?.city}, ${detail?.address?.postalCode}, ${detail?.address?.state}`
+    : "Address information not available";
+  const companyaddress = detail 
+    ? `${detail?.company?.address?.address}, ${detail?.company?.address?.city}, ${detail?.company?.address?.postalCode}, ${detail?.company?.address?.state}`
+    : "Address information not available";
   return (
     <Box display="flex">
       <Suspense fallback={<div>Loading...</div>}>
@@ -100,11 +101,16 @@ const UserlistDetail = () => {
               transition: "all 0.4s ease 0s",
             }}
           >
-            Users List
+            Users DetailS
           </StyledH1>
         </div>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={8} md={6}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+          <Grid item xs={12} sm={8} md={6} lg={6}>
+            <div>
+              <img alt={detail.image} src={detail.image} className="w-full"/>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={8} md={6} lg={6}>
             {detail ? (
               <div className="user-details-container">
                 <div className="user-detail-row">
@@ -115,9 +121,9 @@ const UserlistDetail = () => {
                 </div>
                 <div className="user-detail-row">
                   <Typography variant="subtitle1" className="font-bold">
-                    Website:
+                    Maiden Name:
                   </Typography>
-                  <Typography variant="body1">{detail.website}</Typography>
+                  <Typography variant="body1">{detail.maidenName}</Typography>
                 </div>
                 <div className="user-detail-row">
                   <Typography variant="subtitle1" className="font-bold">
@@ -135,19 +141,48 @@ const UserlistDetail = () => {
                 </div>
                 <div className="user-detail-row">
                   <Typography variant="subtitle1" className="font-bold">
-                    Company Bs:
+                    Company Address:
                   </Typography>
-                  <Typography variant="body1">detail.company.bs</Typography>
+                  <Typography variant="body1">{companyaddress}</Typography>
                 </div>
                 <div className="user-detail-row">
                   <Typography variant="subtitle1" className="font-bold">
-                    Company catchPhrase:
+                    Age:
                   </Typography>
-                  <Typography variant="body1">
-                    {detail?.company?.catchPhrase}
+                  <Typography variant="body1">{detail.age}</Typography>
+                </div>
+                <div className="user-detail-row">
+                  <Typography variant="subtitle1" className="font-bold">
+                    Blood Group:
                   </Typography>
+                  <Typography variant="body1">{detail.bloodGroup}</Typography>
+                </div>
+                <div className="user-detail-row">
+                  <Typography variant="subtitle1" className="font-bold">
+                    Weight:
+                  </Typography>
+                  <Typography variant="body1">{detail.weight}</Typography>
+                </div>
+                <div className="user-detail-row">
+                  <Typography variant="subtitle1" className="font-bold">
+                    Birth Date:
+                  </Typography>
+                  <Typography variant="body1">{detail.birthDate}</Typography>
+                </div>
+                <div className="user-detail-row">
+                  <Typography variant="subtitle1" className="font-bold">
+                    Gender:
+                  </Typography>
+                  <Typography variant="body1">{detail.gender}</Typography>
+                </div>
+                <div className="user-detail-row">
+                  <Typography variant="subtitle1" className="font-bold">
+                    University:
+                  </Typography>
+                  <Typography variant="body1">{detail.university}</Typography>
                 </div>
               </div>
+              
             ) : (
               <Typography variant="body1" align="center" color="error">
                 No Data Found

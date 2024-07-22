@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useMemo, lazy, Suspense, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  lazy,
+  Suspense,
+  Fragment,
+} from "react";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import {
   TableContainer,
   Table,
@@ -20,12 +28,14 @@ import {
   Stack,
   Alert,
   InputAdornment,
+  Switch,
 } from "@mui/material";
 import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 // import Homepage from "../homepage/Homepage";
 import { useLocation, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import PhoneInput from "react-phone-input-2";
 const Homepage = lazy(() => import("../homepage/Homepage"));
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -84,6 +94,7 @@ const handleSearchDebounced = debounce(
   500
 );
 const Users = () => {
+  const [checked, setChecked] = useState(true);
   const [open, setOpen] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deletedialogtitle, setDeleteDialogTitle] = useState("Delete Contact");
@@ -111,11 +122,13 @@ const Users = () => {
   // console.log(dialogTitle);
   const location = useLocation();
   // console.log(location);
-  // console.log(filteredData);
+  // console.log(userData);
+
   // const FilterContact = userData.filter(
   //   (item) => item.id === (location.state ? location.state.id : null)
   // );
 
+  // console.log(filtercontactlength>0);
   // const mappedContacts = mapcontact[0]?.contacts || [];
   const FilterContact = useMemo(
     () =>
@@ -191,8 +204,7 @@ const Users = () => {
       TextFieldData.Mobile === "" ||
       TextFieldData.Email === ""
     ) {
-      setAlertType("error");
-      setAlertMessage("Please Fill All The Fields");
+      toast.info("Please Fill All The Fields");
       return false;
     }
 
@@ -233,6 +245,7 @@ const Users = () => {
       Email: TextFieldData.Email,
       PhoneNo: TextFieldData.Mobile,
     };
+
     if (dialogTitle === "Add Contact") {
       const updatedUserData = userData.map((user) => {
         // console.log(user);
@@ -251,8 +264,7 @@ const Users = () => {
       setUserData(updatedUserData);
       localStorage.setItem("user", JSON.stringify(updatedUserData));
 
-      setAlertType("success");
-      setAlertMessage("Contact Added Successfully");
+      toast.success("Contact Added Successfully");
       setOpen(false);
       setTextFieldData({
         FirstName: "",
@@ -282,8 +294,7 @@ const Users = () => {
       setUserData(updatedUserData);
       localStorage.setItem("user", JSON.stringify(updatedUserData));
 
-      setAlertType("success");
-      setAlertMessage("Contact Edited Successfully");
+      toast.success("Contact Edited Successfully");
       setOpen(false);
       setTextFieldData({
         FirstName: "",
@@ -311,6 +322,7 @@ const Users = () => {
 
     setUserData(updatedUserData);
     localStorage.setItem("user", JSON.stringify(updatedUserData));
+    toast.success("Contact Deleted Successfully");
     setOpenDeleteDialog(false);
   };
 
@@ -344,6 +356,10 @@ const Users = () => {
   const handlecloseconfirm = () => {
     setOpenDeleteDialog(false);
   };
+
+  const handleChecked = (e) => {
+    setChecked(e.target.checked);
+  };
   return (
     <>
       <Box className="flex">
@@ -352,27 +368,26 @@ const Users = () => {
         </Suspense>
 
         <Box component="main" className="p-3 grow h-14">
-          {alertType && (
-            <div className="mb-5 w-2/5">
-              <Alert severity={alertType}>
-                <AlertTitle>
-                  {alertType === "error" ? "Error" : "Success"}
-                </AlertTitle>
-                {alertMessage}
-              </Alert>
-            </div>
-          )}
-          <Button
-            onClick={() => handleClickOpen()}
-            variant="contained"
-            sx={{
-              backgroundColor: "#9c27b0",
-              "&:hover": { backgroundColor: "#9c27b0" },
-            }}
-          >
-            Add Contact{" "}
-          </Button>
-
+            <ToastContainer
+              pauseOnHover={false}
+              pauseOnFocusLoss={false}
+              autoClose={2000}
+              transition={Bounce}
+              position="top-right"
+            />
+          <Switch defaultChecked onChange={(e) => handleChecked(e)} />
+          {checked ? (
+            <Button
+              onClick={() => handleClickOpen()}
+              variant="contained"
+              sx={{
+                backgroundColor: "#9c27b0",
+                "&:hover": { backgroundColor: "#9c27b0" },
+              }}
+            >
+              Add Contact{" "}
+            </Button>
+          ) : null}
           <TextField
             sx={{ margin: "0px 0px 0px 10px", width: "20%" }}
             name="search"
@@ -454,6 +469,7 @@ const Users = () => {
                   {errorData.LastName}
                 </div>
               )}
+
               <TextField
                 sx={{ margin: "0px 10px 10px 0px", width: "100%" }}
                 name="Mobile"

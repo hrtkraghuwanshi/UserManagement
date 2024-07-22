@@ -12,7 +12,23 @@ $border-radius: 20px;
   margin: 0;
   padding: 0;
 }
+.react-tel-input .form-control {
+  position: relative;
+  font-size: 14px;
+  letter-spacing: .01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 48px;
+  margin-left: 0;
 
+  background: #FFFFFF;
+  border: 1px solid #CACACA;
+  border-radius: 5px;
+  line-height: 25px;
+  height: 35px;
+  width: 100% !important;
+  outline: none;
+}
 .container {
   background-image: url("../login/images/background6.jpg");
   @include flex-center;

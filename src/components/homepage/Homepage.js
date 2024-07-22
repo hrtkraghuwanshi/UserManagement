@@ -3,6 +3,9 @@ import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupIcon from "@mui/icons-material/Group";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -67,7 +70,19 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const options = ["logout", "settings"];
+
+const ITEM_HEIGHT = 48;
 function Homepage(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const opentool = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   // console.log("running..");
   // console.log(props.id);
   const getdata = JSON.parse(localStorage.getItem("user")) || [];
@@ -126,6 +141,7 @@ function Homepage(props) {
     localStorage.setItem("loggedIn", JSON.stringify(false));
     navigate("/");
   };
+
   return (
     <Box className="flex">
       <CssBaseline />
@@ -233,10 +249,12 @@ function Homepage(props) {
         </List>
         <Box className="absolute w-full bottom-0 pb-2">
           <Divider />
-          <div className="flex flex-row justify-around align-items-center pt-10 pr-0 pb-10 pl-0">
-            <div>
-              <AccountCircleIcon style={{ fontSize: "45px" }} />
-            </div>
+          <div className="flex flex-row justify-around  align-items-center pt-10 pr-0 pb-10 pl-0">
+            {open && (
+              <div>
+                <AccountCircleIcon style={{ fontSize: "45px" }} />
+              </div>
+            )}
             {open && (
               <div>
                 {" "}
@@ -248,16 +266,38 @@ function Homepage(props) {
                 </div>
               </div>
             )}
+            <div>
+              {" "}
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={opentool ? "long-menu" : undefined}
+                aria-expanded={opentool ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={opentool}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "20ch",
+                  },
+                }}
+              >
+                <MenuItem onClick={handlelogout}>LOGOUT</MenuItem>{" "}
+                <MenuItem onClick={()=>navigate("/setting",{state:{id:props.id}})}>SETTINGS</MenuItem>
+              </Menu>
+            </div>
           </div>
-          <Divider />
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            onClick={() => handlelogout()}
-          >
-            Logout
-          </Button>
         </Box>
       </Drawer>
     </Box>

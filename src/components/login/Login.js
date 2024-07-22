@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import "../register/register.scss";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertTitle, Button, styled } from "@mui/material";
-import NotFound from "../errorpage/NotFound";
+import { toast, ToastContainer } from "react-toastify";
+
+// Import toastify css file
+import "react-toastify/dist/ReactToastify.css";
 const StyledButton = styled(Button)({
   backgroundColor: "white",
   color: "black",
@@ -20,6 +23,7 @@ const StyledButton = styled(Button)({
     color: "white",
   },
 });
+
 const Login = () => {
   const getItems = JSON.parse(localStorage.getItem("user") || "[]");
   // console.log(getItems);
@@ -32,8 +36,6 @@ const Login = () => {
   const id = filterEmail?.id;
   const [Password, setPassword] = useState(filter[0]?.Password || "");
 
-  const [alertType, setAlertType] = useState(null);
-  const [alertMessage, setAlertMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
@@ -43,16 +45,13 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Email === "" && Password === "") {
-      setAlertType("error");
-      setAlertMessage("Please Fill All The  Fields");
+      toast.info("Please Fill All Fields");
       return;
     } else if (Password === "") {
-      setAlertType("error");
-      setAlertMessage("Please Fill Password Field");
+      toast.info("Please Fill Password Field");
       return;
     } else if (Email === "") {
-      setAlertType("error");
-      setAlertMessage("Please Fill Email Field");
+      toast.info("Please Fill Email Field");
       return;
     }
 
@@ -90,8 +89,8 @@ const Login = () => {
 
       localStorage.setItem("user", JSON.stringify(updatedItems));
       localStorage.setItem("loggedIn", JSON.stringify(true));
-      setAlertType("success");
-      setAlertMessage("Login successfully");
+
+      toast.success("Login successfully");
       setEmail("");
       setPassword("");
       navigate("/dashboard", {
@@ -101,38 +100,24 @@ const Login = () => {
       });
       return;
     } else {
-      setAlertType("error");
-      setAlertMessage("Invalid Email or Password");
+      toast.info("Invalid Email or Password");
       return;
     }
   };
-  useEffect(() => {
-    const alertTimeout = setTimeout(() => {
-      setAlertType(null);
-    }, 3000);
 
-    return () => {
-      clearTimeout(alertTimeout);
-    };
-  }, [alertType]);
   useEffect(() => {
     localStorage.setItem("loggedIn", JSON.stringify(false));
   }, []);
   return (
     <>
-      <div className="container">
-        <div>
-          {alertType && (
-            <div className="mb-5 w-full">
-              <Alert severity={alertType}>
-                <AlertTitle>
-                  {alertType === "error" ? "Error" : "Success"}
-                </AlertTitle>
-                {alertMessage}
-              </Alert>
-            </div>
-          )}
-        </div>
+      <div className="container mr-0">
+        <ToastContainer
+          pauseOnHover={false}
+          pauseOnFocusLoss={false}
+          autoClose={2000}
+          position="top-right"
+        />
+
         <div className="login-container">
           <h1 className="text-center pt-30 text-white text-3xl selection:text-black selection:bg-white">
             Login
@@ -156,7 +141,7 @@ const Login = () => {
                 value={Email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {emailError && (
+              {emailError ?(
                 <div
                   style={{
                     color: "red",
@@ -166,7 +151,7 @@ const Login = () => {
                 >
                   {emailError}
                 </div>
-              )}
+              ):null}
             </div>
 
             <div className="input-container">

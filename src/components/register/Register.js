@@ -3,7 +3,17 @@ import "./register.scss";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { Alert, AlertTitle, styled, Button } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  styled,
+  Button,
+  TextField,
+  Fade,
+} from "@mui/material";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 const Style = styled(Button)({
   backgroundColor: "white",
   color: "black",
@@ -33,6 +43,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [phoneno, setPhoneno] = useState("");
+  // console.log(phoneno);
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [userarray, setUserArray] = useState(
@@ -49,40 +60,28 @@ const Register = () => {
       !phoneno &&
       !gender
     ) {
-      setAlertType("error");
-      setAlertMessage("Please Fill All The Fields");
+      toast.info("Please Fill All The Fields");
       return;
     } else if (!Name) {
-      setAlertType("error");
-      setAlertMessage("Please Fill Name Field");
+      toast.info("Please Fill Name Field");
       return;
     } else if (!phoneno) {
-      setAlertType("error");
-      setAlertMessage("Please Fill PhoneNo Field");
+      toast.info("Please Fill PhoneNo Field");
       return;
     } else if (!Email) {
-      setAlertType("error");
-      setAlertMessage("Please Fill Email Field");
+      toast.info("Please Fill Email Field");
       return;
     } else if (!gender) {
-      setAlertType("error");
-      setAlertMessage("Please Fill Gender Field");
+      toast.info("Please Fill Gender Field");
       return;
     } else if (!Password) {
-      setAlertType("error");
-      setAlertMessage("Please Fill Password Field");
+      toast.info("Please Fill Password Field");
       return;
     } else if (!ConfirmPassword) {
-      setAlertType("error");
-      setAlertMessage("Please Fill Confirm-Password Field");
+      toast.info("Please Fill Confirm-Password Field");
       return;
     }
-    if (!/^\d{10}$/.test(phoneno)) {
-      setPhoneError("Phone number must be 10 digits.");
-      return;
-    } else {
-      setPhoneError("");
-    }
+
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(Email)) {
       setEmailError("Invalid Email");
       return;
@@ -109,8 +108,7 @@ const Register = () => {
       setPasswordError("");
     }
     if (Password !== ConfirmPassword) {
-      setAlertType("error");
-      setAlertMessage("Password Does Not Match");
+      toast.error("Password Does Not Match");
       return;
     }
     const userData = {
@@ -124,30 +122,19 @@ const Register = () => {
     };
 
     if (userarray.some((item) => item.Email === Email)) {
-      setAlertType("error");
-      setAlertMessage("Email already exists");
+      toast.error("Email already exists");
       return;
     }
     // console.log(userData);
     const updatedUserArray = [...userarray, userData];
     setUserArray(updatedUserArray);
     localStorage.setItem("user", JSON.stringify(updatedUserArray));
-   
-    setAlertType("success");
-    setAlertMessage("Registered successfully");
+
+    toast.success("Registered successfully");
 
     navigate("/");
     return;
   };
-  useEffect(() => {
-    const alertTimeout = setTimeout(() => {
-      setAlertType(null);
-    }, 3000);
-
-    return () => {
-      clearTimeout(alertTimeout);
-    };
-  }, [alertType]);
 
   const blockChar = (e) => {
     if (!((e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode === 8)) {
@@ -156,18 +143,13 @@ const Register = () => {
   };
   return (
     <div className="container">
-      <div>
-        {alertType && (
-          <div className="mb-5 mt-4 w-full">
-            <Alert severity={alertType}>
-              <AlertTitle>
-                {alertType === "error" ? "Error" : "Success"}
-              </AlertTitle>
-              {alertMessage}
-            </Alert>
-          </div>
-        )}
-      </div>
+      <ToastContainer
+        pauseOnHover={false}
+        pauseOnFocusLoss={false}
+        autoClose={2000}
+        transition={Bounce}
+        position="top-right"
+      />
       <div className="login-container">
         <h1 className="text-center pt-30 text-white text-3xl selection:text-black selection:bg-white">
           SignUp
@@ -198,7 +180,24 @@ const Register = () => {
             >
               PhoneNo
             </label>
-            <input
+            <PhoneInput
+              country={"in"}
+              value={phoneno}
+              onChange={(phone) => setPhoneno(phone)}
+              inputStyle={{
+                color: "black",
+              }}
+              buttonStyle={{
+                color: "black",
+              }}
+              placeholder="Enter your phone number"
+              inputProps={{
+                name: "phoneno",
+                required: true,
+                autoComplete: "off",
+              }}
+            />
+            {/* <input
               className="text-black"
               type="text"
               name="phoneno"
@@ -210,14 +209,7 @@ const Register = () => {
               onKeyDown={(e) => blockChar(e)}
               onChange={(e) => setPhoneno(e.target.value)}
               required
-            />
-            {phoneError && (
-              <div
-                style={{ color: "red", fontSize: "1.1em", marginTop: "5px" }}
-              >
-                {phoneError}
-              </div>
-            )}
+            /> */}
           </div>
           <div className="input-container">
             <label
@@ -231,7 +223,7 @@ const Register = () => {
               className="text-black"
               name="email"
               autoComplete="off"
-              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+              s
               placeholder="Enter your email"
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
