@@ -31,11 +31,11 @@ import {
   Switch,
 } from "@mui/material";
 import { debounce } from "lodash";
+import PhoneInput from "react-phone-input-2";
 import { v4 as uuidv4 } from "uuid";
 // import Homepage from "../homepage/Homepage";
 import { useLocation, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
-import PhoneInput from "react-phone-input-2";
 const Homepage = lazy(() => import("../homepage/Homepage"));
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -95,13 +95,13 @@ const handleSearchDebounced = debounce(
 );
 const Users = () => {
   const [checked, setChecked] = useState(true);
+    const [phoneno, setPhoneno] = useState("");
   const [open, setOpen] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deletedialogtitle, setDeleteDialogTitle] = useState("Delete Contact");
   const [TextFieldData, setTextFieldData] = useState({
     FirstName: "",
     LastName: "",
-    Mobile: "",
     Email: "",
     search: "",
   });
@@ -109,7 +109,7 @@ const Users = () => {
   const [errorData, setErrorData] = useState({
     FirstName: "",
     LastName: "",
-    Mobile: "",
+
     Email: "",
   });
   const [alertType, setAlertType] = useState(null);
@@ -184,10 +184,11 @@ const Users = () => {
   };
   const handleClose = () => {
     setOpen(false);
+    setPhoneno("");
     setTextFieldData({
       FirstName: "",
       LastName: "",
-      Mobile: "",
+
       Email: "",
       search: "",
     });
@@ -201,24 +202,11 @@ const Users = () => {
     if (
       TextFieldData.FirstName === "" ||
       TextFieldData.LastName === "" ||
-      TextFieldData.Mobile === "" ||
+      phoneno === "" ||
       TextFieldData.Email === ""
     ) {
       toast.info("Please Fill All The Fields");
       return false;
-    }
-
-    if (!/^\d{10}$/.test(TextFieldData.Mobile)) {
-      setErrorData((prevState) => ({
-        ...prevState,
-        Mobile: "Phone number must be 10 digits.",
-      }));
-      return false;
-    } else {
-      setErrorData((prevState) => ({
-        ...prevState,
-        Mobile: "",
-      }));
     }
 
     if (
@@ -243,7 +231,7 @@ const Users = () => {
       FirstName: TextFieldData.FirstName,
       LastName: TextFieldData.LastName,
       Email: TextFieldData.Email,
-      PhoneNo: TextFieldData.Mobile,
+      PhoneNo: phoneno,
     };
 
     if (dialogTitle === "Add Contact") {
@@ -269,10 +257,11 @@ const Users = () => {
       setTextFieldData({
         FirstName: "",
         LastName: "",
-        Mobile: "",
+
         Email: "",
         search: "",
       });
+      setPhoneno("");
     } else if (dialogTitle === "Edit Contact") {
       const updatedUserData = userData.map((user) => {
         if (user.id === location.state.id) {
@@ -299,10 +288,11 @@ const Users = () => {
       setTextFieldData({
         FirstName: "",
         LastName: "",
-        Mobile: "",
+
         Email: "",
         search: "",
       });
+      setPhoneno("");
     }
   };
 
@@ -336,10 +326,10 @@ const Users = () => {
       id: selectedContact.id,
       FirstName: selectedContact.FirstName,
       LastName: selectedContact.LastName,
-      Mobile: selectedContact.PhoneNo,
       Email: selectedContact.Email,
       search: "",
     });
+    setPhoneno(selectedContact.PhoneNo);
   };
   useEffect(() => {
     const alertTimeout = setTimeout(() => {
@@ -368,13 +358,13 @@ const Users = () => {
         </Suspense>
 
         <Box component="main" className="p-3 grow h-14">
-            <ToastContainer
-              pauseOnHover={false}
-              pauseOnFocusLoss={false}
-              autoClose={2000}
-              transition={Bounce}
-              position="top-right"
-            />
+          <ToastContainer
+            pauseOnHover={false}
+            pauseOnFocusLoss={false}
+            autoClose={2000}
+            transition={Bounce}
+            position="top-right"
+          />
           <Switch defaultChecked onChange={(e) => handleChecked(e)} />
           {checked ? (
             <Button
@@ -469,22 +459,27 @@ const Users = () => {
                   {errorData.LastName}
                 </div>
               )}
+              <div style={{ marginBottom: "10px" }}>
+                <PhoneInput
+                  sx={{ margin: "15px 10px 10px 0px", width: "100%" }}
+                  country={"in"}
+                  value={phoneno}
+                  inputStyle={{
+                    color: "black",
+                  }}
+                  buttonStyle={{
+                    color: "black",
+                  }}
+                  placeholder="Enter your phone number"
+                  inputProps={{
+                    name: "phoneno",
+                    required: true,
+                    autoComplete: "off",
+                  }}
+                  onChange={(phone) => setPhoneno(phone)}
+                />
+              </div>
 
-              <TextField
-                sx={{ margin: "0px 10px 10px 0px", width: "100%" }}
-                name="Mobile"
-                placeholder="Mobile"
-                value={TextFieldData.Mobile}
-                autoComplete="off"
-                onChange={(e) => handleTextField(e)}
-              />
-              {errorData.Mobile && (
-                <div
-                  style={{ color: "red", fontSize: "1.1em", marginTop: "5px" }}
-                >
-                  {errorData.Mobile}
-                </div>
-              )}
               <TextField
                 sx={{ margin: "0px 10px 10px 0px", width: "100%" }}
                 name="Email"

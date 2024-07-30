@@ -37,6 +37,7 @@ import {
 import { debounce, set } from "lodash";
 import CloseIcon from "@mui/icons-material/Close";
 import { getusers } from "../redux/action";
+import PhoneInput from "react-phone-input-2";
 const Homepage = lazy(() => import("../homepage/Homepage"));
 const StyledH1 = styled("h1")({
   position: "relative",
@@ -84,7 +85,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UserList = () => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
-
+  const [phoneno, setPhoneno] = useState("");
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -92,13 +93,13 @@ const UserList = () => {
   const [errorData, setErrorData] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+
     email: "",
   });
   const [TextFieldData, setTextFieldData] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+
     email: "",
   });
   const [alertType, setAlertType] = useState(null);
@@ -159,9 +160,10 @@ const UserList = () => {
     setTextFieldData({
       firstName: "",
       lastName: "",
-      phone: "",
+
       email: "",
     });
+    setPhoneno("");
   };
   const handleDelete = async (e, id) => {
     e.stopPropagation();
@@ -194,24 +196,11 @@ const UserList = () => {
     if (
       TextFieldData.firstName === "" ||
       TextFieldData.lastName === "" ||
-      TextFieldData.phone === "" ||
+      phoneno === "" ||
       TextFieldData.email === ""
     ) {
       toast.info("Please Fill All The Fields");
       return false;
-    }
-
-    if (!/^\d{10}$/.test(TextFieldData.phone)) {
-      setErrorData((prevState) => ({
-        ...prevState,
-        phone: "Phone number must be 10 digits.",
-      }));
-      return false;
-    } else {
-      setErrorData((prevState) => ({
-        ...prevState,
-        phone: "",
-      }));
     }
 
     if (
@@ -233,7 +222,7 @@ const UserList = () => {
     const data = {
       firstName: TextFieldData.firstName,
       lastName: TextFieldData.lastName,
-      phone: TextFieldData.phone,
+      phone: phoneno,
       email: TextFieldData.email,
     };
     // console.log(data);
@@ -247,9 +236,10 @@ const UserList = () => {
         setTextFieldData({
           firstName: "",
           lastName: "",
-          phone: "",
+
           email: "",
         });
+        setPhoneno("");
       }
     } else if (dialogTitle === "Edit User") {
       const edit = await dispatch(editusers(selectedId, data));
@@ -259,9 +249,10 @@ const UserList = () => {
         setTextFieldData({
           firstName: "",
           lastName: "",
-          phone: "",
+
           email: "",
         });
+        setPhoneno("");
       }
     }
   };
@@ -273,9 +264,9 @@ const UserList = () => {
     setTextFieldData({
       firstName: user.firstName,
       lastName: user.lastName,
-      phone: user.phone,
       email: user.email,
     });
+    setPhoneno(user.phone);
     setSelectedId(id);
     setDialogTitle("Edit User");
     setOpen(true);
@@ -397,22 +388,26 @@ const UserList = () => {
                   {errorData.lastName}
                 </div>
               )}
-
-              <TextField
-                sx={{ margin: "0px 10px 10px 0px", width: "100%" }}
-                name="phone"
-                placeholder=" PhoneNo"
-                autoComplete="off"
-                value={TextFieldData.phone}
-                onChange={(e) => handleTextField(e)}
-              />
-              {errorData.phone && (
-                <div
-                  style={{ color: "red", fontSize: "1.1em", marginTop: "5px" }}
-                >
-                  {errorData.phone}
-                </div>
-              )}
+              <div style={{ marginBottom: "10px" }}>
+                <PhoneInput
+                  sx={{ margin: "15px 10px 10px 0px", width: "100%" }}
+                  country={"in"}
+                  value={phoneno}
+                  inputStyle={{
+                    color: "black",
+                  }}
+                  buttonStyle={{
+                    color: "black",
+                  }}
+                  placeholder="Enter your phone number"
+                  inputProps={{
+                    name: "phoneno",
+                    required: true,
+                    autoComplete: "off",
+                  }}
+                  onChange={(phone) => setPhoneno(phone)}
+                />
+              </div>
 
               <TextField
                 sx={{ margin: "0px 10px 10px 0px", width: "100%" }}
@@ -465,7 +460,7 @@ const UserList = () => {
                   <TableCell className="text-white">
                     {orderBy === "firstName" ? (
                       <TableSortLabel
-                        active={true} 
+                        active={true}
                         direction={order}
                         onClick={(e) => handleRequestSort(e, "firstName")}
                       >
@@ -543,7 +538,7 @@ const UserList = () => {
             <Pagination
               variant="outlined"
               shape="rounded"
-              count={Math.ceil(paginationdata.total / limit ||0)}
+              count={Math.ceil(paginationdata.total / limit || 0)}
               defaultPage={currentPage}
               page={currentPage}
               onChange={handlePageChange}

@@ -1,5 +1,13 @@
 import { React, Suspense, useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+} from "@mui/material";
 import Homepage from "../homepage/Homepage";
 import PhoneInput from "react-phone-input-2";
 import { useLocation } from "react-router-dom";
@@ -14,7 +22,6 @@ const Setting = () => {
     Name: filterid[0]?.Name,
     Email: filterid[0]?.Email,
     gender: filterid[0].Gender,
-    Password: filterid[0].Password,
   });
   const [phoneno, setPhoneno] = useState(filterid[0]?.PhoneNo);
 
@@ -30,7 +37,7 @@ const Setting = () => {
       Name: TextFieldData.Name,
       Email: TextFieldData.Email,
       Gender: TextFieldData.gender,
-      Password: TextFieldData.Password,
+
       phoneNo: phoneno,
     };
     if (filterid) {
@@ -105,32 +112,28 @@ const Setting = () => {
             onChange={(e) => handleTextField(e)}
           />
 
-          <TextField
-            sx={{ margin: "35px 10px 10px 0px", width: "100%" }}
-            name="gender"
-            id="outlined-basic"
-            label="Gender"
-            variant="outlined"
-            autoComplete="off"
-            value={TextFieldData.gender}
-            onChange={(e) => handleTextField(e)}
-          />
-          <TextField
-            sx={{ margin: "35px 10px 10px 0px", width: "100%" }}
-            name="Password"
-            id="outlined-basic"
-            label="Password"
-            variant="outlined"
-            autoComplete="off"
-            value={TextFieldData.Password}
-            onChange={(e) => handleTextField(e)}
-          />
+          <FormControl fullWidth className="mt-6">
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+              className="h-12"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="gender"
+              value={TextFieldData.gender}
+              label="Gender"
+              onChange={(e) => handleTextField(e)}
+            >
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+          </FormControl>
+
           <Button
             autoFocus
             variant="contained"
             onClick={() => HandleSubmit()}
             sx={{
-              margin: "10px 0px 15px 0px",
+              margin: "20px 0px 15px 0px",
               backgroundColor: "#9c27b0",
               "&:hover": { backgroundColor: "#9c27b0" },
             }}

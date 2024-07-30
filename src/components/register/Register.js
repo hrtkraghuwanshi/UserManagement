@@ -163,7 +163,7 @@ const Register = () => {
               Name
             </label>
             <input
-              className="text-black"
+              className="text-black input-text"
               type="text"
               autoComplete="off"
               name="username"
@@ -220,7 +220,7 @@ const Register = () => {
             </label>
             <input
               type="text"
-              className="text-black"
+              className="text-black input-text"
               name="email"
               autoComplete="off"
               s
@@ -271,7 +271,7 @@ const Register = () => {
               type="password"
               name="password"
               autoComplete="off"
-              className="text-black"
+              className="text-black input-text"
               placeholder="Enter your password"
               value={Password}
               onChange={(e) => setPassword(e.target.value)}
@@ -296,7 +296,7 @@ const Register = () => {
               type="password"
               autoComplete="off"
               name="password"
-              className="text-black"
+              className="text-black input-text"
               placeholder="Enter your confirm-password"
               value={ConfirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

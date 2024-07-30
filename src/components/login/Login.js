@@ -132,7 +132,7 @@ const Login = () => {
                 Username
               </label>
               <input
-                className="text-black"
+                className="text-black input-text"
                 type="text"
                 id="username"
                 autoComplete="off"
@@ -163,7 +163,7 @@ const Login = () => {
               </label>
               <div className="password-input-container">
                 <input
-                  className="text-black"
+                  className="text-black input-text"
                   type="password"
                   autoComplete="off"
                   id="password"

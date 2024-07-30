@@ -213,7 +213,7 @@ function Homepage(props) {
               >
                 <AccountCircleIcon />
               </ListItemIcon>
-              <ListItemText primary="Users" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary="ContactList" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
           <ListItem
@@ -249,7 +249,61 @@ function Homepage(props) {
         </List>
         <Box className="absolute w-full bottom-0 pb-2">
           <Divider />
+
           <div className="flex flex-row justify-around  align-items-center pt-10 pr-0 pb-10 pl-0">
+            {!open && (
+              <>
+                <div className="flex flex-col">
+                  <div>
+                    <AccountCircleIcon style={{ fontSize: "45px" }} />
+                  </div>{" "}
+                  <div>
+                    {" "}
+                    <IconButton
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={opentool ? "long-menu" : undefined}
+                      aria-expanded={opentool ? "true" : undefined}
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="long-menu"
+                      MenuListProps={{
+                        "aria-labelledby": "long-button",
+                      }}
+                      anchorEl={anchorEl}
+                      open={opentool}
+                      onClose={handleClose}
+                      PaperProps={{
+                        style: {
+                          maxHeight: ITEM_HEIGHT * 4.5,
+                          width: "15%",
+                        },
+                      }}
+                    >
+                      <MenuItem onClick={handlelogout}>LOGOUT</MenuItem>{" "}
+                      <MenuItem
+                        onClick={() =>
+                          navigate("/setting", { state: { id: props.id } })
+                        }
+                      >
+                        SETTINGS
+                      </MenuItem>
+                      <MenuItem
+                    onClick={() =>
+                      navigate("/changepass", { state: { id: props.id } })
+                    }
+                  >
+                    CHANGE PASSWORD
+                  </MenuItem>
+                    </Menu>
+                  </div>
+                </div>
+              </>
+            )}
             {open && (
               <div>
                 <AccountCircleIcon style={{ fontSize: "45px" }} />
@@ -266,37 +320,52 @@ function Homepage(props) {
                 </div>
               </div>
             )}
-            <div>
-              {" "}
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={opentool ? "long-menu" : undefined}
-                aria-expanded={opentool ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                anchorEl={anchorEl}
-                open={opentool}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: "20ch",
-                  },
-                }}
-              >
-                <MenuItem onClick={handlelogout}>LOGOUT</MenuItem>{" "}
-                <MenuItem onClick={()=>navigate("/setting",{state:{id:props.id}})}>SETTINGS</MenuItem>
-              </Menu>
-            </div>
+            {open && (
+              <div>
+                {" "}
+                <IconButton
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={opentool ? "long-menu" : undefined}
+                  aria-expanded={opentool ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={opentool}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                      width: "15%",
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handlelogout}>LOGOUT</MenuItem>{" "}
+                  <MenuItem
+                    onClick={() =>
+                      navigate("/setting", { state: { id: props.id } })
+                    }
+                  >
+                    SETTINGS
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      navigate("/changepass", { state: { id: props.id } })
+                    }
+                  >
+                    CHANGE PASSWORD
+                  </MenuItem>
+                </Menu>
+              </div>
+            )}
           </div>
         </Box>
       </Drawer>

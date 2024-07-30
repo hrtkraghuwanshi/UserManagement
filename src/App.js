@@ -12,6 +12,7 @@ import UserlistDetail from "./components/userslistdetail/UserlistDetail";
 // import Detailed from "./components/userdetailed/Detailed";
 import NotFound from "./components/errorpage/NotFound";
 import Setting from "./components/setting/Setting";
+import ChangePass from "./components/changepass/ChangePass";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,9 @@ function App() {
             </Route>
             <Route path="/setting" element={<Protected />}>
               <Route path="/setting" element={<Setting />} />
+            </Route>
+            <Route path="/changepass" element={<Protected />}>
+              <Route path="/changepass" element={<ChangePass />} />
             </Route>
             <Route path="/*" element={<NotFound />} />
             {/* <Route path="/users/detailed" element={<Detailed/>} /> */}
